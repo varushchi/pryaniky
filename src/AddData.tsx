@@ -36,10 +36,6 @@ export default function AddData(props : Props) {
       },
       body: JSON.stringify(props.addInput)
     })
-
-    console.log(JSON.stringify(props.addInput))
-
-    const data = await res.json();
   }
 
   return (

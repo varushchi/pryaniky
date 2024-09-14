@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import AddData from './AddData';
+import DeleteData from './DeleteData';
 
 interface Props{
   token: string
@@ -35,6 +36,8 @@ export default function Main(props: Props) {
     employeeSigDate: '2022-12-23T11:19:27.017Z\t',
     employeeSignatureName: 'test'
   })
+  const [deleteButton, setDeleteButton] = useState(false)
+  const [optionValue, setOptionvalue] = useState('1')
 
   useEffect(() => {
     async function getTable(){
@@ -50,7 +53,7 @@ export default function Main(props: Props) {
       setTableData(data.data)
     }
     getTable()
-  },[props.token, addButton])
+  },[props.token, addButton, deleteButton])
 
 
   const columns: GridColDef[] = [
@@ -71,34 +74,63 @@ export default function Main(props: Props) {
     }
   })
 
+  async function DeleteItem() {
+    const res = tableData && await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${tableData[Number(optionValue)-1].id}`, {
+      method: 'POST',
+      headers: {
+        'x-auth': props.token,
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
   return (
     <div className='Main'>
       {tableData && 
-        <Paper sx={{ height: 400, width: '100%' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            checkboxSelection
-            disableMultipleRowSelection = {true}
-            sx={{ border: 0 }}
-            initialState={{
-              columns: {
-                columnVisibilityModel: {
-                  id: false,
+        <div>
+          <Paper sx={{ height: 400, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              checkboxSelection
+              disableMultipleRowSelection = {true}
+              sx={{ border: 0 }}
+              initialState={{
+                columns: {
+                  columnVisibilityModel: {
+                    id: false,
+                  },
                 },
-              },
-            }}
-          />
-        </Paper>
+              }}
+            />
+          </Paper>
+          <button onClick={() => setAddButton(!addButton)}>Add</button>  
+          {addButton && 
+            <AddData 
+              token={props.token}
+              addInput={addInput}
+              handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
+              toggleButton={() => setAddButton(!addButton)}
+            />}
+          <button onClick={() => setDeleteButton(!deleteButton)}>Delete</button>
+          {deleteButton &&
+            <DeleteData
+              length={tableData.length}
+              toggleButton={() => {
+                DeleteItem()
+                console.log(tableData)
+                setDeleteButton(!deleteButton)
+              }}
+              handleChange={(e) => setOptionvalue(e.target.value)}
+            />}
+        </div>
       }
-
       <button onClick={() => {
         localStorage.removeItem('userToken')
         props.handleToken('')
       }
       }>Logout</button>
-      <button onClick={() => setAddButton(!addButton)}>Add</button>  
-      {addButton && <AddData token={props.token} addInput={addInput} handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})} toggleButton={() => setAddButton(!addButton)}/>}
+      
     </div>
     
   )
