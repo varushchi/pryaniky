@@ -39,8 +39,8 @@ export default function Login(props: Props) {
   return (
     <div className='Login'>
       <form onSubmit={(e) => {e.preventDefault()}}>
-        <input type='text' name='user' value={username} onChange={(e)=>{setUsername(e.target.value)}}/>
-        <input type='password' name='password' value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
+        <input type='text' name='user' autoComplete='username' value={username} onChange={(e)=>{setUsername(e.target.value)}}/>
+        <input type='password' name='password' autoComplete='current-password' value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
         <button onClick={()=>{handleClick()}}>Login</button>
       </form>
     </div>

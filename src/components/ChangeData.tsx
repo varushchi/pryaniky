@@ -51,8 +51,15 @@ export default function ChangeData(props: Props) {
 
   function handleClick()
   {
-    changeItem()
-    props.toggleButton()
+    const timeReg = new RegExp(/^[1-2][0-9][0-9][0-9]-(0[1-9]|1[1-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])(T(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9](:[0-5][0-9](.[0-9]{1,3}Z?|$)|$)|$)|$)$/)
+    if (inputValue && inputValue.companySigDate && inputValue.employeeSigDate && timeReg.test(inputValue.companySigDate) && timeReg.test(inputValue.employeeSigDate)){
+      changeItem()
+      props.toggleButton()
+    }
+    else{
+      alert('wrong date')
+    }
+    
   }
 
   return (

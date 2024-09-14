@@ -10,7 +10,6 @@ function App() {
   return (
     <div className="App">
       {!userToken && <Login handleToken={(token: string) => setUserToken(token)}/>}
-      
       {userToken && <Main token={userToken} handleToken={(token: string) => setUserToken(token)}/>}
     </div>
   );

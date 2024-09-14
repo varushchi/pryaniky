@@ -27,16 +27,17 @@ export default function Main(props: Props) {
 
   const [tableData, setTableData] = useState<undefined | Data[]>()
   const [addButton, setAddButton] = useState(false)
-  const [addInput, setAddInput] = useState({
-    companySigDate: '2022-12-23T11:19:27.017Z\t',
+  const InnitialAddInput = {
+    companySigDate: '2022-12-23T11:19:27.017Z',
     companySignatureName: 'test',
     documentName: 'test',
     documentStatus: 'test',
     documentType: 'test',
     employeeNumber: 'test',
-    employeeSigDate: '2022-12-23T11:19:27.017Z\t',
+    employeeSigDate: '2022-12-23T11:19:27.017Z',
     employeeSignatureName: 'test'
-  })
+  }
+  const [addInput, setAddInput] = useState(InnitialAddInput)
   const [deleteButton, setDeleteButton] = useState(false)
   const [selectedRowId, setSelectedRowId] = useState<string | undefined>(undefined)
   const [changeButton, setChangeButton] = useState(false)
@@ -73,7 +74,9 @@ export default function Main(props: Props) {
 
   const rows = tableData && tableData.map(elem => {
     return{
-      ...elem
+      ...elem,
+      companySigDate: new Date(elem.companySigDate).toLocaleString(),
+      employeeSigDate: new Date(elem.employeeSigDate).toLocaleString()
     }
   })
 
@@ -135,6 +138,7 @@ export default function Main(props: Props) {
                   token={props.token}
                   addInput={addInput}
                   handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
+                  handleSubmit = {() => setAddInput(InnitialAddInput)}
                   toggleButton={() => setAddButton(!addButton)}
                 />}
             </div>
