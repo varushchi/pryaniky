@@ -81,14 +81,14 @@ export default function Main(props: Props) {
   })
 
   async function DeleteItem() {
-    tableData && selectedRowId && await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${selectedRowId}`, {
+    tableData && await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${selectedRowId}`, {
       method: 'POST',
       headers: {
         'x-auth': props.token,
         'Content-Type': 'application/json'
       }
     })
-    selectedRowId && setDeleteButton(!deleteButton)
+    setDeleteButton(!deleteButton)
   }
 
   useEffect(() => {
