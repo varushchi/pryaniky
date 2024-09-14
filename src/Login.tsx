@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 interface Props{
-  handleSubmit: (token: string) => void
+  handleToken: (token: string) => void
 }
 
 export default function Login(props: Props) {
@@ -9,7 +9,7 @@ export default function Login(props: Props) {
   const [password, setPassword] = useState('')
 
   const HOST = 'https://test.v5.pryaniky.com'
-    async function post(username: string, password: string,){
+    async function getToken(username: string, password: string,){
       const res = await fetch(`${HOST}/ru/data/v3/testmethods/docs/login`, {
         method: 'POST',
         headers: {
@@ -20,7 +20,7 @@ export default function Login(props: Props) {
 
       const data = await res.json();
       localStorage.setItem("userToken", data.data.token);
-      props.handleSubmit(data.data.token)
+      props.handleToken(data.data.token)
   }
 
   function handleClick()
@@ -28,7 +28,7 @@ export default function Login(props: Props) {
     const userReg = new RegExp(/user\d+$/)
     const passwordReg = new RegExp(/password$/)
     if (userReg.test(username) && passwordReg.test(password)){
-      post(username, password)
+      getToken(username, password)
     }
     else{
       alert('wrong username or password')

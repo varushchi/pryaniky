@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
+import AddData from './AddData';
 
 interface Props{
   token: string
-  handleSubmit: (token: string) => void
+  handleToken: (token: string) => void
 }
 
 export default function Main(props: Props) {
@@ -23,9 +24,20 @@ export default function Main(props: Props) {
   }
 
   const [tableData, setTableData] = useState<undefined | Data[]>()
+  const [addButton, setAddButton] = useState(false)
+  const [addInput, setAddInput] = useState({
+    companySigDate: '2022-12-23T11:19:27.017Z\t',
+    companySignatureName: 'test',
+    documentName: 'test',
+    documentStatus: 'test',
+    documentType: 'test',
+    employeeNumber: 'test',
+    employeeSigDate: '2022-12-23T11:19:27.017Z\t',
+    employeeSignatureName: 'test'
+  })
 
   useEffect(() => {
-    async function get(){
+    async function getTable(){
       const res = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/get`, {
         method: 'GET',
         headers: {
@@ -37,8 +49,8 @@ export default function Main(props: Props) {
       const data = await res.json();
       setTableData(data.data)
     }
-    get()
-  },[props.token])
+    getTable()
+  },[props.token, addButton])
 
 
   const columns: GridColDef[] = [
@@ -82,9 +94,11 @@ export default function Main(props: Props) {
 
       <button onClick={() => {
         localStorage.removeItem('userToken')
-        props.handleSubmit('')
+        props.handleToken('')
       }
       }>Logout</button>
+      <button onClick={() => setAddButton(!addButton)}>Add</button>  
+      {addButton && <AddData token={props.token} addInput={addInput} handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})} toggleButton={() => setAddButton(!addButton)}/>}
     </div>
     
   )
