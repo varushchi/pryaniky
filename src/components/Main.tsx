@@ -95,20 +95,6 @@ export default function Main(props: Props) {
     tableData && setRowData(tableData.find(elem => elem.id === selectedRowId))
   }, [selectedRowId, tableData])
 
-  function handleDeleteButton(){
-    selectedRowId ? DeleteItem() : alert('Select Row')
-  }
-
-  function handleChangeButton(){
-    if (selectedRowId)
-    setChangeButton(!changeButton)
-    else{
-      setChangeButton(false)
-      alert('Select Row')
-    }
-  }
-
-
   return (
     <div className='Main'>
       {tableData && 
@@ -143,7 +129,7 @@ export default function Main(props: Props) {
                 />}
             </div>
             <div className='change-button'>
-              {selectedRowId && <button onClick={handleChangeButton}>Change</button>}
+              {selectedRowId && <button onClick={() => setChangeButton(!changeButton)}>Change</button>}
               {changeButton && selectedRowId &&
                 <ChangeData 
                   rowData = {rowData}
@@ -152,7 +138,7 @@ export default function Main(props: Props) {
                 />
               }
             </div>
-              {selectedRowId && <button className='delete-button' onClick={handleDeleteButton}>Delete</button>}
+              {selectedRowId && <button className='delete-button' onClick={DeleteItem}>Delete</button>}
               
           </div>
           
