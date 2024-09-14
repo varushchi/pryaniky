@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import AddData from './AddData';
 import ChangeData from './ChangeData';
@@ -42,9 +44,12 @@ export default function Main(props: Props) {
   const [selectedRowId, setSelectedRowId] = useState<string | undefined>(undefined)
   const [changeButton, setChangeButton] = useState(false)
   const [rowData, setRowData] = useState<Data | undefined>()
+  const [isLoading, setIsLoading] = useState(false)
+  const [dataChanged, setDataChanged] = useState(true)
 
   useEffect(() => {
     async function getTable(){
+      setIsLoading(true)
       const res = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/get`, {
         method: 'GET',
         headers: {
@@ -52,12 +57,12 @@ export default function Main(props: Props) {
           'Content-Type': 'application/json'
         }
       })
-
       const data = await res.json();
       setTableData(data.data)
+      setIsLoading(false)
     }
     getTable()
-  },[props.token, addButton, deleteButton, changeButton])
+  },[props.token, dataChanged, deleteButton])
 
 
   const columns: GridColDef[] = [
@@ -89,6 +94,7 @@ export default function Main(props: Props) {
       }
     })
     setDeleteButton(!deleteButton)
+    setSelectedRowId(undefined)
   }
 
   useEffect(() => {
@@ -97,7 +103,7 @@ export default function Main(props: Props) {
 
   return (
     <div className='Main'>
-      {tableData && 
+      {tableData && !isLoading &&
         <div className='datagrid'>
           <Paper sx={{ height: 400, maxWidth: '100%' }}>
             <DataGrid
@@ -125,7 +131,10 @@ export default function Main(props: Props) {
                   addInput={addInput}
                   handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
                   handleSubmit = {() => setAddInput(InnitialAddInput)}
-                  toggleButton={() => setAddButton(!addButton)}
+                  toggleButton={() => {
+                    setAddButton(!addButton)
+                    setDataChanged(!dataChanged)
+                  }}
                 />}
             </div>
             <div className='change-button'>
@@ -134,7 +143,10 @@ export default function Main(props: Props) {
                 <ChangeData 
                   rowData = {rowData}
                   token = {props.token}
-                  toggleButton={() => setChangeButton(!changeButton)}
+                  toggleButton={() => {
+                    setChangeButton(!changeButton)
+                    setDataChanged(!dataChanged)
+                  }}
                 />
               }
             </div>
@@ -145,13 +157,24 @@ export default function Main(props: Props) {
             
         </div>
       }
+
+      {isLoading && 
+        <div className='isloading'>
+          <div>
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress />
+            </Box>
+          </div>
+          
+        </div>
+      }
+
       <button className='logout-button' onClick={() => {
         localStorage.removeItem('userToken')
         props.handleToken('')
       }
       }>Logout</button>
-      
     </div>
-    
   )
 }
+
