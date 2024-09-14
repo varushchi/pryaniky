@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import AddData from './AddData';
-import DeleteData from './DeleteData';
 
 interface Props{
   token: string
@@ -37,7 +36,7 @@ export default function Main(props: Props) {
     employeeSignatureName: 'test'
   })
   const [deleteButton, setDeleteButton] = useState(false)
-  const [optionValue, setOptionvalue] = useState('1')
+  const [selectedRowId, setSelectedRowId] = useState('')
 
   useEffect(() => {
     async function getTable(){
@@ -75,13 +74,14 @@ export default function Main(props: Props) {
   })
 
   async function DeleteItem() {
-    const res = tableData && await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${tableData[Number(optionValue)-1].id}`, {
+    tableData && selectedRowId && await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${selectedRowId}`, {
       method: 'POST',
       headers: {
         'x-auth': props.token,
         'Content-Type': 'application/json'
       }
     })
+    selectedRowId && setDeleteButton(!deleteButton)
   }
 
   return (
@@ -94,6 +94,7 @@ export default function Main(props: Props) {
               columns={columns}
               checkboxSelection
               disableMultipleRowSelection = {true}
+              onRowSelectionModelChange={(item) => item ? setSelectedRowId(String(item[0])) : setSelectedRowId('')}
               sx={{ border: 0 }}
               initialState={{
                 columns: {
@@ -112,17 +113,8 @@ export default function Main(props: Props) {
               handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
               toggleButton={() => setAddButton(!addButton)}
             />}
-          <button onClick={() => setDeleteButton(!deleteButton)}>Delete</button>
-          {deleteButton &&
-            <DeleteData
-              length={tableData.length}
-              toggleButton={() => {
-                DeleteItem()
-                console.log(tableData)
-                setDeleteButton(!deleteButton)
-              }}
-              handleChange={(e) => setOptionvalue(e.target.value)}
-            />}
+          <button
+            onClick={() => DeleteItem()}>Delete</button>
         </div>
       }
       <button onClick={() => {
