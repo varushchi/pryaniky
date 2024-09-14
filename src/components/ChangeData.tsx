@@ -57,7 +57,7 @@ export default function ChangeData(props: Props) {
       props.toggleButton()
     }
     else{
-      alert('wrong date')
+      alert('Wrong date. Example: 2022-12-23T11:19:27.017Z')
     }
     
   }

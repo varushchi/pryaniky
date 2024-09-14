@@ -31,7 +31,7 @@ export default function AddData(props : Props) {
       props.handleSubmit()
     }
     else{
-      alert('Wrong date')
+      alert('Wrong date. Example: 2022-12-23T11:19:27.017Z')
     }
 
     
