@@ -28,7 +28,7 @@ export default function AddData(props : Props) {
   }
 
   async function addItem() {
-    const res = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/create`, {
+    await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/create`, {
       method: 'POST',
       headers: {
         'x-auth': props.token,
@@ -39,7 +39,7 @@ export default function AddData(props : Props) {
   }
 
   return (
-    <div>
+    <div className='AddData'>
       <input type='text' name='companySigDate' value={props.addInput.companySigDate} onChange={(e) => props.handleChange(e)}/>
       <input type='text' name='companySignatureName' value={props.addInput.companySignatureName} onChange={(e) => props.handleChange(e)}/>
       <input type='text' name='documentName' value={props.addInput.documentName} onChange={(e) => props.handleChange(e)}/>

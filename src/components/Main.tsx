@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import AddData from './AddData';
+import ChangeData from './ChangeData';
+import './Main.css'
 
 interface Props{
   token: string
@@ -36,7 +38,9 @@ export default function Main(props: Props) {
     employeeSignatureName: 'test'
   })
   const [deleteButton, setDeleteButton] = useState(false)
-  const [selectedRowId, setSelectedRowId] = useState('')
+  const [selectedRowId, setSelectedRowId] = useState<string | undefined>(undefined)
+  const [changeButton, setChangeButton] = useState(false)
+  const [rowData, setRowData] = useState<Data | undefined>()
 
   useEffect(() => {
     async function getTable(){
@@ -52,19 +56,19 @@ export default function Main(props: Props) {
       setTableData(data.data)
     }
     getTable()
-  },[props.token, addButton, deleteButton])
+  },[props.token, addButton, deleteButton, changeButton])
 
 
   const columns: GridColDef[] = [
     {field: 'id', headerName: 'ID'},
-    {field: 'companySigDate', headerName: 'companySigDate', minWidth: 200},
-    {field: 'companySignatureName', headerName: 'companySignatureName', minWidth: 200},
-    {field: 'documentName', headerName: 'documentName', minWidth: 200},
-    {field: 'documentStatus', headerName: 'documentStatus', minWidth: 150},
-    {field: 'documentType', headerName: 'documentType', minWidth: 200},
-    {field: 'employeeNumber', headerName: 'employeeNumber', minWidth: 100},
-    {field: 'employeeSigDate', headerName: 'employeeSigDate', minWidth: 200},
-    {field: 'employeeSignatureName', headerName: 'employeeSignatureName', minWidth: 200},
+    {field: 'companySigDate', headerName: 'Company sign date', maxWidth: 200, width: 200},
+    {field: 'companySignatureName', headerName: 'Company signature name', maxWidth: 200, width: 200},
+    {field: 'documentName', headerName: 'Document name', maxWidth: 200, width: 200},
+    {field: 'documentStatus', headerName: 'Document status', maxWidth: 150, width: 150},
+    {field: 'documentType', headerName: 'Document type', maxWidth: 200, width: 200},
+    {field: 'employeeNumber', headerName: 'Employee number', maxWidth: 150, width: 150},
+    {field: 'employeeSigDate', headerName: 'Employee sign date', maxWidth: 200, width: 200},
+    {field: 'employeeSignatureName', headerName: 'Employee signature name', maxWidth: 200, width: 200},
   ]
 
   const rows = tableData && tableData.map(elem => {
@@ -84,17 +88,35 @@ export default function Main(props: Props) {
     selectedRowId && setDeleteButton(!deleteButton)
   }
 
+  useEffect(() => {
+    tableData && setRowData(tableData.find(elem => elem.id === selectedRowId))
+  }, [selectedRowId, tableData])
+
+  function handleDeleteButton(){
+    selectedRowId ? DeleteItem() : alert('Select Row')
+  }
+
+  function handleChangeButton(){
+    if (selectedRowId)
+    setChangeButton(!changeButton)
+    else{
+      setChangeButton(false)
+      alert('Select Row')
+    }
+  }
+
+
   return (
     <div className='Main'>
       {tableData && 
-        <div>
-          <Paper sx={{ height: 400, width: '100%' }}>
+        <div className='datagrid'>
+          <Paper sx={{ height: 400, maxWidth: '100%' }}>
             <DataGrid
               rows={rows}
               columns={columns}
               checkboxSelection
               disableMultipleRowSelection = {true}
-              onRowSelectionModelChange={(item) => item ? setSelectedRowId(String(item[0])) : setSelectedRowId('')}
+              onRowSelectionModelChange={(item) => item.length > 0 ? setSelectedRowId(String(item[0])) : setSelectedRowId(undefined)}
               sx={{ border: 0 }}
               initialState={{
                 columns: {
@@ -105,19 +127,35 @@ export default function Main(props: Props) {
               }}
             />
           </Paper>
-          <button onClick={() => setAddButton(!addButton)}>Add</button>  
-          {addButton && 
-            <AddData 
-              token={props.token}
-              addInput={addInput}
-              handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
-              toggleButton={() => setAddButton(!addButton)}
-            />}
-          <button
-            onClick={() => DeleteItem()}>Delete</button>
+          <div className='change-buttons'>
+            <div className='add-button'>
+            <button onClick={() => setAddButton(!addButton)}>Add</button>  
+              {addButton && 
+                <AddData 
+                  token={props.token}
+                  addInput={addInput}
+                  handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
+                  toggleButton={() => setAddButton(!addButton)}
+                />}
+            </div>
+            <div className='change-button'>
+              <button onClick={handleChangeButton}>Change</button>
+              {changeButton && selectedRowId &&
+                <ChangeData 
+                  rowData = {rowData}
+                  token = {props.token}
+                  toggleButton={() => setChangeButton(!changeButton)}
+                />
+              }
+            </div>
+            
+              <button className='delete-button' onClick={handleDeleteButton}>Delete</button>
+          </div>
+          
+            
         </div>
       }
-      <button onClick={() => {
+      <button className='logout-button' onClick={() => {
         localStorage.removeItem('userToken')
         props.handleToken('')
       }
