@@ -23,12 +23,25 @@ export default function Login(props: Props) {
       props.handleSubmit(data.data.token)
   }
 
+  function handleClick()
+  {
+    const userReg = new RegExp(/user\d+$/)
+    const passwordReg = new RegExp(/password$/)
+    if (userReg.test(username) && passwordReg.test(password)){
+      post(username, password)
+    }
+    else{
+      alert('wrong username or password')
+    }
+
+  }
+
   return (
     <div className='Login'>
       <form onSubmit={(e) => {e.preventDefault()}}>
         <input type='text' name='user' value={username} onChange={(e)=>{setUsername(e.target.value)}}/>
         <input type='password' name='password' value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-        <button onClick={()=>{post(username, password)}}>Login</button>
+        <button onClick={()=>{handleClick()}}>Login</button>
       </form>
     </div>
   )

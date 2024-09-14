@@ -36,10 +36,9 @@ export default function Main(props: Props) {
 
       const data = await res.json();
       setTableData(data.data)
-      console.log(props.token)
     }
     get()
-  },[props.token]) // change dependency or useEffect
+  },[props.token])
 
 
   const columns: GridColDef[] = [
@@ -68,6 +67,7 @@ export default function Main(props: Props) {
             rows={rows}
             columns={columns}
             checkboxSelection
+            disableMultipleRowSelection = {true}
             sx={{ border: 0 }}
             initialState={{
               columns: {
@@ -86,5 +86,6 @@ export default function Main(props: Props) {
       }
       }>Logout</button>
     </div>
+    
   )
 }
