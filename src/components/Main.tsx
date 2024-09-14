@@ -143,7 +143,7 @@ export default function Main(props: Props) {
                 />}
             </div>
             <div className='change-button'>
-              <button onClick={handleChangeButton}>Change</button>
+              {selectedRowId && <button onClick={handleChangeButton}>Change</button>}
               {changeButton && selectedRowId &&
                 <ChangeData 
                   rowData = {rowData}
@@ -152,8 +152,8 @@ export default function Main(props: Props) {
                 />
               }
             </div>
-            
-              <button className='delete-button' onClick={handleDeleteButton}>Delete</button>
+              {selectedRowId && <button className='delete-button' onClick={handleDeleteButton}>Delete</button>}
+              
           </div>
           
             
