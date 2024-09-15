@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import AddData from './AddData';
 import ChangeData from './ChangeData';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import './Main.css'
 
 interface Props{
@@ -105,7 +107,7 @@ export default function Main(props: Props) {
     <div className='Main'>
       {tableData && !isLoading &&
         <div className='datagrid'>
-          <Paper sx={{ height: 400, maxWidth: '100%' }}>
+          <Paper sx={{ height: 400, maxWidth: '100%', marginBottom: '20px' }}>
             <DataGrid
               rows={rows}
               columns={columns}
@@ -124,13 +126,18 @@ export default function Main(props: Props) {
           </Paper>
           <div className='change-buttons'>
             <div className='add-button'>
-            <button onClick={() => setAddButton(!addButton)}>Add</button>  
+            <Button
+              variant="contained"
+              onClick={() => setAddButton(!addButton)}
+              sx = {{height: '40px', width: '100px'}}
+            >Add</Button>
               {addButton && 
                 <AddData 
                   token={props.token}
                   addInput={addInput}
-                  handleChange={(e) => setAddInput({...addInput, [e.target.name]: e.target.value})}
+                  handleChange={(e) => setAddInput({...addInput, [e.target.id]: e.target.value})}
                   handleSubmit = {() => setAddInput(InnitialAddInput)}
+                  toggleSelectRow = {() => setSelectedRowId(undefined)}
                   toggleButton={() => {
                     setAddButton(!addButton)
                     setDataChanged(!dataChanged)
@@ -138,7 +145,11 @@ export default function Main(props: Props) {
                 />}
             </div>
             <div className='change-button'>
-              {selectedRowId && <button onClick={() => setChangeButton(!changeButton)}>Change</button>}
+              {selectedRowId && <Button
+                variant="contained"
+                onClick={() => setChangeButton(!changeButton)}
+                sx = {{height: '40px', width: '100px'}}
+              >Change</Button>}
               {changeButton && selectedRowId &&
                 <ChangeData 
                   rowData = {rowData}
@@ -147,14 +158,24 @@ export default function Main(props: Props) {
                     setChangeButton(!changeButton)
                     setDataChanged(!dataChanged)
                   }}
+                  toggleSelectRow = {() => setSelectedRowId(undefined)}
                 />
               }
             </div>
-              {selectedRowId && <button className='delete-button' onClick={DeleteItem}>Delete</button>}
-              
+              {selectedRowId && <Button
+                variant="contained"
+                onClick={DeleteItem}
+                sx = {{height: '40px', width: '100px'}}
+              >Delete</Button>}
+              <Button
+                variant="contained"
+                onClick={() => {
+                  localStorage.removeItem('userToken')
+                  props.handleToken('')
+                }}
+                sx = {{height: '40px', width: '100px'}}
+              >Logout</Button>
           </div>
-          
-            
         </div>
       }
 
@@ -168,12 +189,6 @@ export default function Main(props: Props) {
           
         </div>
       }
-
-      <button className='logout-button' onClick={() => {
-        localStorage.removeItem('userToken')
-        props.handleToken('')
-      }
-      }>Logout</button>
     </div>
   )
 }

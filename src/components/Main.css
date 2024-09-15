@@ -1,36 +1,22 @@
-.change-buttons{
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.delete-button{
-  margin-bottom: 15px;
-}
-
-.change-buttons > div > button,
-.change-buttons > button,
-.logout-button,
-.AddData > button,
-.ChangeData > button{
-  width: 100px;
-  height: 30px;
-}
-
-.AddData > input,
-.ChangeData > input{
-  padding-left: 10px;
-  height: 24px;
-}
-
-.add-button,
-.change-button{
-  display: flex;
-}
-
 .isloading{
   max-width: 100%;
   height: 50px;
   display: table;
   margin: 200px auto;
+}
+
+.change-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.add-button{
+  display: flex;
+  gap: 10px;
+}
+
+.change-button{
+  display: flex;
+  gap: 10px;
 }

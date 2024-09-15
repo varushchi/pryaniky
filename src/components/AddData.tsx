@@ -1,4 +1,7 @@
 import React from 'react'
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 interface Data{
   companySigDate: string
@@ -14,10 +17,11 @@ interface Data{
 
 interface Props{
   addInput: Data
-  handleChange: (e:React.ChangeEvent<HTMLInputElement>) => void
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   token: string
   toggleButton: () => void
   handleSubmit: () => void
+  toggleSelectRow: () => void
 }
 
 export default function AddData(props : Props) {
@@ -46,19 +50,92 @@ export default function AddData(props : Props) {
       body: JSON.stringify(props.addInput)
     })
     props.toggleButton()
+    props.toggleSelectRow()
   }
 
   return (
     <div className='AddData'>
-      <input type='text' name='companySigDate' value={props.addInput.companySigDate} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='companySignatureName' value={props.addInput.companySignatureName} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='documentName' value={props.addInput.documentName} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='documentStatus' value={props.addInput.documentStatus} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='documentType' value={props.addInput.documentType} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='employeeNumber' value={props.addInput.employeeNumber} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='employeeSigDate' value={props.addInput.employeeSigDate} onChange={(e) => props.handleChange(e)}/>
-      <input type='text' name='employeeSignatureName' value={props.addInput.employeeSignatureName} onChange={(e) => props.handleChange(e)}/>
-      <button onClick={handleClick}>Save</button>
+      <Box
+        component="form"
+        sx = {{
+          display: 'flex',
+          gap: '10px'
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          id="companySigDate"
+          label="companySigDate"
+          variant="outlined"
+          sx={{minWidth: '230px'}}
+          size='small'
+          value={props.addInput.companySigDate}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="companySignatureName"
+          label="companySignatureName"
+          variant="outlined"
+          size='small'
+          value={props.addInput.companySignatureName}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="documentName"
+          label="documentName"
+          variant="outlined"
+          size='small'
+          value={props.addInput.documentName}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="documentStatus"
+          label="documentStatus"
+          variant="outlined"
+          size='small'
+          value={props.addInput.documentStatus}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="documentType"
+          label="documentType"
+          variant="outlined"
+          size='small'
+          value={props.addInput.documentType}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="employeeNumber"
+          label="employeeNumber"
+          variant="outlined"
+          size='small'
+          value={props.addInput.employeeNumber}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="employeeSigDate"
+          label="employeeSigDate"
+          variant="outlined"
+          size='small'
+          sx={{minWidth: '230px'}}
+          value={props.addInput.employeeSigDate}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <TextField
+          id="employeeSignatureName"
+          label="employeeSignatureName"
+          variant="outlined"
+          size='small'
+          value={props.addInput.employeeSignatureName}
+          onChange={(e) => props.handleChange(e)}
+        />
+        <Button
+            variant="contained"
+            onClick={handleClick}
+            sx = {{height: '40px', width: '100px'}}
+          >Save</Button>
+      </Box>
     </div>
 )
 }

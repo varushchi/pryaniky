@@ -17,9 +17,6 @@ export default function Login(props: Props) {
   const passwordRef = useRef(null)
   const [usernameFocus, setUsernameFocus] = useState(false)
   const [passwordFocus, setPasswordFocus] = useState(false)
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const HOST = 'https://test.v5.pryaniky.com'
     async function getToken(username: string, password: string,){
@@ -116,7 +113,6 @@ export default function Login(props: Props) {
         />
         <Button
           variant="contained"
-          size="medium"
           onClick={()=>{handleClick()}}
           sx = {{height: '56px'}}
         >Login</Button>
