@@ -22,6 +22,7 @@ interface Props{
   toggleButton: () => void
   handleSubmit: () => void
   toggleSelectRow: () => void
+  handleChildLoading: (bool: boolean) => void
 }
 
 export default function AddData(props : Props) {
@@ -78,7 +79,8 @@ export default function AddData(props : Props) {
   }, [employeeDateFocus])
 
   async function addItem() {
-    await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/create`, {
+    props.handleChildLoading(true)
+    const res = await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/create`, {
       method: 'POST',
       headers: {
         'x-auth': props.token,
@@ -86,6 +88,8 @@ export default function AddData(props : Props) {
       },
       body: JSON.stringify(props.addInput)
     })
+    const data = await res.json()
+    props.handleChildLoading(false)
     props.toggleButton()
     props.toggleSelectRow()
   }

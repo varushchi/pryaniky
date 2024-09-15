@@ -20,6 +20,7 @@ interface Props{
   token: string
   toggleButton: () => void
   toggleSelectRow: () => void
+  handleChildLoading: (bool: boolean) => void
 }
 
 export default function ChangeData(props: Props) {
@@ -49,6 +50,7 @@ export default function ChangeData(props: Props) {
 
 
   async function changeItem() {
+    props.handleChildLoading(true)
     await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/set/${props.rowData?.id}`, {
       method: 'POST',
       headers: {
@@ -57,6 +59,7 @@ export default function ChangeData(props: Props) {
       },
       body: JSON.stringify(inputValue)
     })
+    props.handleChildLoading(false)
     props.toggleButton()
     props.toggleSelectRow()
   }

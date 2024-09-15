@@ -46,6 +46,7 @@ export default function Main(props: Props) {
   const [changeButton, setChangeButton] = useState(false)
   const [rowData, setRowData] = useState<Data | undefined>()
   const [isLoading, setIsLoading] = useState(false)
+  const [childIsLoading, setChildIsLoading] = useState(false)
   const [dataChanged, setDataChanged] = useState(true)
 
   useEffect(() => {
@@ -87,6 +88,7 @@ export default function Main(props: Props) {
   })
 
   async function DeleteItem() {
+    setChildIsLoading(true)
     tableData && await fetch(`${HOST}/ru/data/v3/testmethods/docs/userdocs/delete/${selectedRowId}`, {
       method: 'POST',
       headers: {
@@ -94,6 +96,7 @@ export default function Main(props: Props) {
         'Content-Type': 'application/json'
       }
     })
+    setChildIsLoading(false)
     setDeleteButton(!deleteButton)
     setSelectedRowId(undefined)
   }
@@ -104,7 +107,7 @@ export default function Main(props: Props) {
 
   return (
     <div className='Main'>
-      {tableData && !isLoading &&
+      {tableData && !isLoading && !childIsLoading &&
         <div className='datagrid'>
           <Paper sx={{ height: 400, maxWidth: '100%', marginBottom: '20px' }}>
             <DataGrid
@@ -141,6 +144,7 @@ export default function Main(props: Props) {
                     setAddButton(!addButton)
                     setDataChanged(!dataChanged)
                   }}
+                  handleChildLoading = {(bool: boolean) => setChildIsLoading(bool)}
                 />}
             </div>
             <div className='change-button'>
@@ -158,6 +162,7 @@ export default function Main(props: Props) {
                     setDataChanged(!dataChanged)
                   }}
                   toggleSelectRow = {() => setSelectedRowId(undefined)}
+                  handleChildLoading = {(bool: boolean) => setChildIsLoading(bool)}
                 />
               }
             </div>
@@ -178,14 +183,13 @@ export default function Main(props: Props) {
         </div>
       }
 
-      {isLoading && 
+      {(isLoading || childIsLoading) && 
         <div className='isloading'>
           <div>
             <Box sx={{ display: 'flex' }}>
               <CircularProgress />
             </Box>
           </div>
-          
         </div>
       }
     </div>

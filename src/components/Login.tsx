@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import './Login.css'
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Props{
   handleToken: (token: string) => void
@@ -17,9 +18,11 @@ export default function Login(props: Props) {
   const passwordRef = useRef(null)
   const [usernameFocus, setUsernameFocus] = useState(false)
   const [passwordFocus, setPasswordFocus] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const HOST = 'https://test.v5.pryaniky.com'
     async function getToken(username: string, password: string,){
+      setIsLoading(true)
       const res = await fetch(`${HOST}/ru/data/v3/testmethods/docs/login`, {
         method: 'POST',
         headers: {
@@ -27,6 +30,7 @@ export default function Login(props: Props) {
         },
         body: JSON.stringify({ username: username, password: password })
       })
+      setIsLoading(false)
 
       const data = await res.json();
       localStorage.setItem("userToken", data.data.token);
@@ -75,7 +79,7 @@ export default function Login(props: Props) {
 
   return (
     <div className='Login'>
-      <Box
+      {!isLoading && <Box
         component="form"
         sx = {{
           width: '300px',
@@ -116,7 +120,17 @@ export default function Login(props: Props) {
           onClick={()=>{handleClick()}}
           sx = {{height: '56px'}}
         >Login</Button>
-      </Box>
+      </Box>}
+
+      {isLoading && 
+        <div className='isloading'>
+          <div>
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress />
+            </Box>
+          </div>
+        </div>
+      }
     </div>
   )
 }
