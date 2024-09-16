@@ -37,8 +37,9 @@ export default function Login(props: Props) {
       props.handleToken(data.data.token)
   }
 
-  function handleClick()
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>)
   {
+    e.preventDefault()
     const userReg = new RegExp(/user\d+$/)
     const passwordReg = new RegExp(/password$/)
 
@@ -89,6 +90,7 @@ export default function Login(props: Props) {
         }}
         noValidate
         autoComplete="off"
+        onSubmit={(e) => handleSubmit(e)}
       >
         <TextField
           id="username"
@@ -117,7 +119,7 @@ export default function Login(props: Props) {
         />
         <Button
           variant="contained"
-          onClick={()=>{handleClick()}}
+          type='submit'
           sx = {{height: '56px'}}
         >Login</Button>
       </Box>}
